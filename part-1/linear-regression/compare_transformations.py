@@ -69,7 +69,9 @@ def run_single_transformation(
 def compare_all_transformations():
     """Compare all transformation types."""
     # Configuration
-    DATA_PATH = "../data/raw/hour.csv"
+    DATA_PATH = (
+        "../../data/raw/hour.csv"  # Go up to part-1, then up to bike, then into data
+    )
     CONTINUOUS_COLS = ["temp", "hum", "windspeed"]
     CATEGORICAL_COLS = ["season", "hr", "weekday", "weathersit", "yr"]
 

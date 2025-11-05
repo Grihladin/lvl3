@@ -19,7 +19,9 @@ from model_evaluation import (
 
 def main():
     # Configuration
-    DATA_PATH = "../data/raw/hour.csv"
+    DATA_PATH = (
+        "../../data/raw/hour.csv"  # Go up to part-1, then up to bike, then into data
+    )
     CONTINUOUS_COLS = ["temp", "hum", "windspeed"]
     CATEGORICAL_COLS = ["season", "hr", "weekday", "weathersit", "yr"]
     TRANSFORM_TYPE = "cbrt"  # 'cbrt', 'log', 'sqrt', or 'original'

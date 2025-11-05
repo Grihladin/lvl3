@@ -6,7 +6,9 @@ import os
 
 # Load the hourly bike sharing data
 print("Loading data...")
-df = pd.read_csv("../data/raw/hour.csv")
+df = pd.read_csv(
+    "../../data/raw/hour.csv"
+)  # Go up to part-1, then up to bike, then into data
 print(f"Original dataset shape: {df.shape}")
 
 # Display first few rows and info
