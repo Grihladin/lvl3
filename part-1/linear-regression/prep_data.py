@@ -18,7 +18,7 @@ print(df.info())
 # Separate features and target
 # Target variable: 'cnt' (total count of bike rentals)
 # Remove columns that shouldn't be used for training
-columns_to_drop = ["instant", "dteday", "casual", "registered", "cnt"]
+columns_to_drop = ["instant", "dteday", "casual", "registered", "cnt", "atemp"]
 target = df["cnt"]
 features = df.drop(columns=columns_to_drop)
 
@@ -36,7 +36,7 @@ categorical_cols = [
     "workingday",
     "weathersit",
 ]
-numerical_cols = ["temp", "atemp", "hum", "windspeed"]
+numerical_cols = ["temp", "hum", "windspeed"]
 
 print(f"\nCategorical columns: {categorical_cols}")
 print(f"Numerical columns: {numerical_cols}")
@@ -75,11 +75,11 @@ print(f"\nProcessed dataset shape: {df_processed.shape}")
 print(f"Feature names: {list(df_processed.columns)}")
 
 # Create output directory if it doesn't exist
-output_dir = "data/prepeared"
+output_dir = "data"
 os.makedirs(output_dir, exist_ok=True)
 
 # Save processed data
-output_path = os.path.join(output_dir, "hour_processed.csv")
+output_path = os.path.join(output_dir, "hour_processed_lr.csv")
 df_processed.to_csv(output_path, index=False)
 print(f"\nProcessed data saved to: {output_path}")
 
