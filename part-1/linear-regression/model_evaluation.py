@@ -3,12 +3,71 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, mean_squared_log_error
+from sklearn.metrics import (
+    mean_squared_error,
+    mean_absolute_error,
+    r2_score,
+    mean_squared_log_error,
+)
 import os
 
 # Set seaborn style
 sns.set_style("whitegrid")
 sns.set_palette("husl")
+
+"""
+REGRESSION METRICS EXPLAINED
+============================
+
+1. MSE (Mean Squared Error):
+   - Average of squared differences between actual and predicted values
+   - Units: squared units of target variable (e.g., bikes²)
+   - Range: [0, ∞), lower is better
+   - Heavily penalizes large errors due to squaring
+   - Formula: MSE = (1/n) * Σ(actual - predicted)²
+
+2. RMSE (Root Mean Squared Error):
+   - Square root of MSE, same units as target variable
+   - Units: same as target (e.g., bikes)
+   - Range: [0, ∞), lower is better
+   - Easier to interpret than MSE (in original units)
+   - Formula: RMSE = √MSE
+   - Interpretation: "On average, predictions are off by ±X units"
+
+3. MAE (Mean Absolute Error):
+   - Average of absolute differences between actual and predicted values
+   - Units: same as target (e.g., bikes)
+   - Range: [0, ∞), lower is better
+   - Less sensitive to outliers than RMSE (no squaring)
+   - Formula: MAE = (1/n) * Σ|actual - predicted|
+   - Interpretation: "Average prediction error is X units"
+
+4. R² (R-Squared / Coefficient of Determination):
+   - Proportion of variance in target explained by the model
+   - Units: unitless (proportion)
+   - Range: (-∞, 1], higher is better
+   - R² = 1.0: Perfect predictions
+   - R² = 0.0: Model is as good as predicting the mean
+   - R² < 0.0: Model is worse than predicting the mean
+   - Formula: R² = 1 - (SS_residual / SS_total)
+   - Interpretation: "Model explains X% of the variance"
+
+5. MSLE (Mean Squared Logarithmic Error):
+   - MSE calculated on log-transformed values
+   - Units: unitless (log scale)
+   - Range: [0, ∞), lower is better 
+   - Penalizes under-predictions more than over-predictions
+   - Only works with non-negative values
+   - Formula: MSLE = (1/n) * Σ(log(actual+1) - log(predicted+1))²
+   - Use case: When relative errors matter more than absolute errors
+   - Interpretation: Good for data with exponential growth or wide ranges
+
+IMPORTANT NOTES:
+- For transformed targets (e.g., cnt^(1/3)), metrics are on transformed scale
+- Always back-transform to original scale for real-world interpretation
+- RMSE ≥ MAE always (due to squaring), equality only when all errors are identical
+- R² can be negative if model performs worse than baseline (mean prediction)
+"""
 
 
 def evaluate_model(
@@ -67,7 +126,9 @@ def evaluate_model(
     test_r2_trans = r2_score(y_test, y_test_pred)
     # MSLE requires non-negative values
     try:
-        test_msle_trans = mean_squared_log_error(np.maximum(0, y_test), np.maximum(0, y_test_pred))
+        test_msle_trans = mean_squared_log_error(
+            np.maximum(0, y_test), np.maximum(0, y_test_pred)
+        )
     except:
         test_msle_trans = np.nan
 
@@ -135,11 +196,15 @@ def evaluate_model(
         print(f"  MAE:  {test_mae:.2f} bikes")
         print(f"  MSLE: {test_msle:.4f} (log scale)")
         print(f"  R²:   {test_r2:.4f}")
-        
+
         print("\n💡 Interpretation:")
         print(f"   On average, our predictions are off by ±{test_mae:.1f} bikes")
-        print(f"   The model explains {test_r2*100:.1f}% of the variance in bike rentals")
-        print(f"   MSLE = {test_msle:.4f} (lower is better, penalizes under-predictions more)")
+        print(
+            f"   The model explains {test_r2*100:.1f}% of the variance in bike rentals"
+        )
+        print(
+            f"   MSLE = {test_msle:.4f} (lower is better, penalizes under-predictions more)"
+        )
 
         metrics.update(
             {
